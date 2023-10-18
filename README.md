@@ -1,4 +1,4 @@
-# Airline Scheduling and Cargo Schedules Expert System
+# Airline and Cargo Scheduling Expert System- GARUDA 
 
 ## Overview:
 
