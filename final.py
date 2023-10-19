@@ -152,7 +152,7 @@ class GARUDA(KnowledgeEngine):
         self.store_flight_in_database(id, destination, time, distance, plane_id, runway_id)
         print(f"Flight {id} is scheduled from PUNE to {destination} at {time} with Plane {plane_id} and Runway {runway_id}.")
         if(distance>2000):
-            print("insufficient fuel please add extra fuel to plane ")
+            print("!!!insufficient fuel please add extra fuel to plane !!!")
         
 
     @Rule(AS.f << Cargo(id=MATCH.id, name=MATCH.name, destination=MATCH.destination))
@@ -161,7 +161,9 @@ class GARUDA(KnowledgeEngine):
 
     @Rule(AS.f << showflight())
     def display_flights(self, f):
+        print()
         print("Upcoming flights details are :")
+        print()
         cursor.execute("SELECT * FROM flights ORDER BY time desc ")
         flights = cursor.fetchall()
         if flights:
@@ -178,11 +180,12 @@ class GARUDA(KnowledgeEngine):
           if flights:
               for flight in flights:
                   print(f"Flight ID: {flight[0]}, Destination: {flight[1]}, Time: {flight[2]}, cargo id:{flight[6]},cargo name:{flight[7]}")
+                  print()
           else:
               print("No flights found.")
 
-          # Remove the fact to avoid triggering the rule again
-          # self.retract(f)       
+        #   Remove the fact to avoid triggering the rule again
+          self.retract(f)       
 
     def get_plane_info(self, plane_id):
         cursor.execute("SELECT * FROM plane WHERE id = ?", (plane_id,))
@@ -227,7 +230,7 @@ class GARUDA(KnowledgeEngine):
                            (id, destination, time, distance, plane_id, runway_id))
 
             connection.commit()
-            print("Flight information stored in the database.")
+         
 
         except sqlite3.Error as err:
             print(f"Error: {err}")
@@ -239,7 +242,7 @@ class GARUDA(KnowledgeEngine):
                            (id, name, destination))
 
             connection.commit()
-            print("Cargo information stored in the database.")
+           
 
         except sqlite3.Error as err:
             print(f"Error: {err}")
@@ -264,9 +267,9 @@ if __name__ == "__main__":
    
     # Declare a flight and cargo based on user input
     while True:
-        user_input = input("Enter |1.Enter Flight details, |2.Enter Cargo Details, |3.Schedule Flight and Cargo "
-                           "|4.show available flights |5.any other key to exit: ")
-
+        print()
+        user_input = input("""Enter |1.Add Flight |2.Add Cargo |3.Schedule Flight and Cargo |4.show available flights |5.Exit: """)
+        print()
         if user_input == '1':
             id_input = int(input('Enter the id of flight: '))
             destination_input = input("Enter the destination for the flight: ")
@@ -275,6 +278,7 @@ if __name__ == "__main__":
             engine.declare(fuel(distance_input))
             engine.run()
             engine.declare(Flight(id=id_input, destination=destination_input, time=time_input, distance=distance_input))
+            print()
             print(f"flight {id_input} is stored in database from pune to {destination_input} at time {time_input} ")
             engine.run()
 
@@ -285,10 +289,12 @@ if __name__ == "__main__":
             engine.declare(Cargo(id=id_input, name=name_input, destination=destination_input))
             print(f"kargo {name_input} is store in database with destination {destination_input}")
             engine.run()
-
+            print()
         elif user_input == '3':
+            print()
             engine.declare(schedule_flight_cargo())
             engine.run()
+            print()
         elif user_input == '4':
             engine.declare(showflight())
             engine.run()
