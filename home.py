@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from experta import KnowledgeEngine, Fact, Rule, AS, MATCH
 import sqlite3
 
@@ -270,3 +271,6 @@ if __name__ == "__main__":
             break
 
 
+=======
+-- gui coming soon -----
+>>>>>>> e667905b6b0fdb48efaef0bfb5bbef9948970724
